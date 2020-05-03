@@ -1,7 +1,11 @@
 package controller;
 
+import controller.requestJson.UserProfileCreationData;
+import controller.responseJson.UserProfileResponseJson;
 import model.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,40 +25,16 @@ import java.util.UUID;
 @RequestMapping(path = "/")
 public class UserProfileController {
 
-        private final UserProfileService userProfileService;
+    @Autowired
+    protected UserProfileService userProfileService;
 
-        @Autowired
-        public UserProfileController(UserProfileService userProfileService) {
-            this.userProfileService = userProfileService;
-        }
+    @PostMapping("/userprofile")
+    public ResponseEntity<UserProfileResponseJson> addUserProfile(UserProfileCreationData userProfileCreationData) {
 
+        UserProfileResponseJson userProfileResponseJson = userProfileService.createUserProfileFrom(userProfileCreationData);
 
-        @GetMapping("/userprofiles")
-        public List<UserProfile> getUserProfiles() {
-            return userProfileService.getUserProfiles();
-        }
-
-//    @GetMapping("/userprofile/{userId}")
-//    UserProfile getUserProfileByID(@PathVariable UUID userId) {
-//
-//        return this.userProfileService.(id)
-//                .orElseThrow(() -> new UserProfileNotFoundException(userId));
-//    }
-
-        @PostMapping("/userprofile")
-        @ResponseBody
-        public void addUserProfile(@RequestBody @Valid UserProfile userProfile) {
-            userProfileService.addNewUserProfile(userProfile);
-        }
-
-        @PutMapping("/userprofile/{userId}")
-        public void updateUserProfile(@PathVariable("userId") UUID userId,
-                                  @RequestBody UserProfile userProfile) {
-            userProfileService.updateUserProfile(userId, userProfile);
-        }
-
-        @DeleteMapping("/userprofile/{userId}")
-        public void deleteUserProfile(@PathVariable("userId") UUID userId) {
-            userProfileService.deleteUserProfile(userId);
-        }
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(userProfileResponseJson);
+    }
 }
