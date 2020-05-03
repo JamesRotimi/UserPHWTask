@@ -1,4 +1,4 @@
-package com.example.UserPHWTask.exception;
+package exception;
 
 public class ApiRequestException extends RuntimeException {
 
