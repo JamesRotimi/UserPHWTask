@@ -1,82 +1,69 @@
 package model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+import static javax.persistence.GenerationType.AUTO;
+
+
+@NoArgsConstructor
+@Data
+@Entity(name = "userProfile")
 public class UserProfile {
 
-    private UUID userId;
+    @Id
+    @GeneratedValue(strategy = AUTO )
+    private long userId;
 
-    @Email(regexp = "^.*[@].*[.].*$")
-    @NotBlank(message = "email must not be null or blank")
-    private String emailId;
+    @Column(name = "email_address")
+    @Size(max = 255)
+    private String emailAddress;
 
-    @NotBlank (message = "firstName must not be null or blank")
+    @Column(name = "first_name")
+    @Size(max = 255)
     private String firstName;
 
-    @NotBlank (message = "lastName must not be null or blank")
+    @Column(name = "last_name")
+    @Size(max = 255)
     private String lastName;
 
-    @NotBlank (message = "createdDate must not be null or blank")
+    @Column(name = "created")
+    @CreationTimestamp
     private LocalDateTime createdDate;
 
-    @NotBlank (message = "lastUpdatedDate must not be null or blank")
+    @Column(name = "last_updated")
+    @UpdateTimestamp
     private LocalDateTime lastUpdatedDate;
 
-    public String getEmailId() {
-        return emailId;
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "userprofile")
+    private List<UserAppointment> userAppointments = new ArrayList<>();
+
+    public void addUserAppointment(UserAppointment userAppointment) {
+        userAppointments.add(userAppointment);
     }
 
-    public void setEmailId(String emailId) {
-        this.emailId = emailId;
+    public List<UserAppointment> getUserAppointments() {
+        return userAppointments;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    @JsonCreator
-    public UserProfile(
-                       @JsonProperty(value = "emailID") String emailId,
-                       @JsonProperty(value = "firstName") String firstName,
-                       @JsonProperty(value = "lastName") String lastName){
-
-        this.emailId = emailId;
+    public UserProfile(String emailAddress, String firstName, String lastName) {
+        this.emailAddress = emailAddress;
         this.firstName = firstName;
         this.lastName = lastName;
-
-
-    }
-
-    private List<UserProfileAppointment> userProfileAppointments;
-
-
-    @Override
-    public String toString() {
-        return "UserProfile [firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + emailId +
-                 " ]";
-    }
-
-
-    public List<UserProfileAppointment> getUserProfileAppointment() {
-        return userProfileAppointments;
     }
 }
