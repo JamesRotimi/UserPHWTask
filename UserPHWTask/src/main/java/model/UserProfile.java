@@ -34,7 +34,7 @@ public class UserProfile {
     private String emailAddress;
 
     @Column(name = "first_name")
-    @Size(max = 255)
+    @Size(max = 256)
     private String firstName;
 
     @Column(name = "last_name")
@@ -61,9 +61,9 @@ public class UserProfile {
         return userAppointments;
     }
 
-    public UserProfile(String emailAddress, String firstName, String lastName) {
-        this.emailAddress = emailAddress;
+    public UserProfile(String firstName, String lastName, String emailAddress) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.emailAddress = emailAddress;
     }
 }

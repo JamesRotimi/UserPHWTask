@@ -18,13 +18,13 @@ public class UserProfileResponseJson {
         private final String lastName;
 
         @JsonProperty
-        private final String email;
+        private final String emailAddress;
 
         @JsonProperty
         private final List<UserAppointmentResponseJson> userAppointments;
 
         public UserProfileResponseJson(UserProfile userProfile) {
-            this.email = userProfile.getEmailAddress();
+            this.emailAddress = userProfile.getEmailAddress();
             this.firstName = userProfile.getFirstName();
             this.lastName = userProfile.getLastName();
             this.userAppointments = userProfile.getUserAppointments()

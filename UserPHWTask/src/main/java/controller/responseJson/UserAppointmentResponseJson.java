@@ -1,8 +1,10 @@
 package controller.responseJson;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import model.UserAppointment;
 
+@Data
 public class UserAppointmentResponseJson {
 
     @JsonProperty("roleId")
